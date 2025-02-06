@@ -5,16 +5,16 @@
 # in your assignment, but you may.
 
 ## Step 0: Activate environment - ensure consistency accross computers
-using Pkg
-Pkg.activate(@__DIR__) # @__DIR__ = directory this script is in
-Pkg.instantiate() # If a Manifest.toml file exist in the current project, download all the packages declared in that manifest. Else, resolve a set of feasible packages from the Project.toml files and install them.
-Pkg.add("LaTeXStrings")
-Pkg.add("PyPlot")
+#using Pkg
+#Pkg.activate(@__DIR__) # @__DIR__ = directory this script is in
+#Pkg.instantiate() # If a Manifest.toml file exist in the current project, download all the packages declared in that manifest. Else, resolve a set of feasible packages from the Project.toml files and install them.
+#Pkg.add("LaTeXStrings")
+#Pkg.add("PyPlot")
 ##  Step 1: input data
 using CSV
 using DataFrames
 using YAML
-using MAT
+#using MAT
 
 
 using Logging
@@ -22,30 +22,30 @@ using Logging
 # global_logger(show_std_streams=false)
 # Logging.disable_logging(LogLevel(Info))
 
-data = YAML.load_file(joinpath(@__DIR__, "data.yaml"))
+data = YAML.load_file(joinpath(@__DIR__, "Data/data.yaml"))
 # ePrice = CSV.read(joinpath(@__DIR__, "eprice.csv"), DataFrame, silencewarnings=true)
 # ePrice = CSV.read(joinpath(@__DIR__, "Day-ahead Prices_April_2023.csv"), DataFrame, silencewarnings=true)
-ePrice = CSV.read(joinpath(@__DIR__, "Day-ahead Prices_2019.csv"), DataFrame, silencewarnings=true)
+ePrice = CSV.read(joinpath(@__DIR__, "Data/Day-ahead Prices_2019.csv"), DataFrame, silencewarnings=true)
 
-coeffs2AWE1 = CSV.read(joinpath(@__DIR__, "coeffs2AWE1.csv"), DataFrame, silencewarnings=true)
-coeffs2AWE2 = CSV.read(joinpath(@__DIR__, "coeffs2AWE2.csv"), DataFrame, silencewarnings=true)
-coeffs2AWE3 = CSV.read(joinpath(@__DIR__, "coeffs2AWE3.csv"), DataFrame, silencewarnings=true)
-coeffs2AWE4 = CSV.read(joinpath(@__DIR__, "coeffs2AWE4.csv"), DataFrame, silencewarnings=true)
-coeffs2AWE5 = CSV.read(joinpath(@__DIR__, "coeffs2AWE5.csv"), DataFrame, silencewarnings=true)
-coeffs2AWE6 = CSV.read(joinpath(@__DIR__, "coeffs2AWE6.csv"), DataFrame, silencewarnings=true)
+coeffs2AWE1 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2AWE1.csv"), DataFrame, silencewarnings=true)
+coeffs2AWE2 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2AWE2.csv"), DataFrame, silencewarnings=true)
+coeffs2AWE3 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2AWE3.csv"), DataFrame, silencewarnings=true)
+coeffs2AWE4 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2AWE4.csv"), DataFrame, silencewarnings=true)
+coeffs2AWE5 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2AWE5.csv"), DataFrame, silencewarnings=true)
+coeffs2AWE6 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2AWE6.csv"), DataFrame, silencewarnings=true)
 
-# coeffs2_eff_Farad1 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad1.csv"), DataFrame, silencewarnings=true)
-# coeffs2_eff_Farad2 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad2.csv"), DataFrame, silencewarnings=true)
-# coeffs2_eff_Farad3 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad3.csv"), DataFrame, silencewarnings=true)
-# coeffs2_eff_Farad4 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad4.csv"), DataFrame, silencewarnings=true)
-# coeffs2_eff_Farad5 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad5.csv"), DataFrame, silencewarnings=true)
-# coeffs2_eff_Farad6 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad6.csv"), DataFrame, silencewarnings=true)
+# coeffs2_eff_Farad1 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad1.csv"), DataFrame, silencewarnings=true)
+# coeffs2_eff_Farad2 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad2.csv"), DataFrame, silencewarnings=true)
+# coeffs2_eff_Farad3 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad3.csv"), DataFrame, silencewarnings=true)
+# coeffs2_eff_Farad4 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad4.csv"), DataFrame, silencewarnings=true)
+# coeffs2_eff_Farad5 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad5.csv"), DataFrame, silencewarnings=true)
+# coeffs2_eff_Farad6 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad6.csv"), DataFrame, silencewarnings=true)
 
-coeffs2_eff_Farad_current1 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad_current1.csv"), DataFrame, silencewarnings=true)
-coeffs2_eff_Farad_current2 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad_current2.csv"), DataFrame, silencewarnings=true)
-coeffs2_eff_Farad_current3 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad_current3.csv"), DataFrame, silencewarnings=true)
-coeffs2_eff_Farad_current4 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad_current4.csv"), DataFrame, silencewarnings=true)
-coeffs2_eff_Farad_current5 = CSV.read(joinpath(@__DIR__, "coeffs2_eff_Farad_current5.csv"), DataFrame, silencewarnings=true)
+coeffs2_eff_Farad_current1 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad_current1.csv"), DataFrame, silencewarnings=true)
+coeffs2_eff_Farad_current2 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad_current2.csv"), DataFrame, silencewarnings=true)
+coeffs2_eff_Farad_current3 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad_current3.csv"), DataFrame, silencewarnings=true)
+coeffs2_eff_Farad_current4 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad_current4.csv"), DataFrame, silencewarnings=true)
+coeffs2_eff_Farad_current5 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2_eff_Farad_current5.csv"), DataFrame, silencewarnings=true)
 
 ## Step 2: create model & pass data to model
 using JuMP
@@ -7458,53 +7458,52 @@ mdotH2vec = [mdotH2[j] for j in J]
 
 using Plots
 using LaTeXStrings
-using StatsPlots
 using Plots.PlotMeasures
 
 
-pyplot()
+grt()
 plot(pvec, label = "Electrolyser Power", xlabel="Time [h]",ylabel = "Electrolyser power [MW]", color = :red, 
         legend = :topleft, left_margin = 5Plots.mm, right_margin = 15Plots.mm)
 plot!(twinx(), epricevec, label = "Electricity price", ylabel="Electricity Price [€/MWh]", legend = :topright)
-savefig("power_price.png")
+savefig("Figures/power_price.png")
 
 plot(J,p_Nvec, xlabel = "Time [h]", ylabel = "Wind Power [MW]",legend = false, left_margin = 5Plots.mm, right_margin = 15Plots.mm)
-savefig("Windpower.png")
+savefig("Figures/Windpower.png")
 
 plot(epricevec, xlabel = "Time [h]", ylabel="Electricity Price [€/MWh]", legend=false)
-savefig("eprice.png")
+savefig("Figures/eprice.png")
 
 plot(J.-1/2, [Tvec], xlabel = "Time [h]", ylabel = "Electrolyser Temperature [°C]",legend = false, left_margin = 5Plots.mm, right_margin = 15Plots.mm)
-savefig("Temperature.png")
+savefig("Figures/Temperature.png")
 
 bar(J.-1/2, [Tvec], xlabel = "Time [h]", ylabel = "Electrolyser Temperature [°C]", legend = false, left_margin = 5Plots.mm, right_margin = 15Plots.mm, bar_width = 1.0, fillalpha = 0.5, linealpha = 0.1)
-savefig("Temperaturebars.png")
+savefig("Figures/Temperaturebars.png")
 
 
 
 
 plot(J, [p_bvec s_bvec i_bvec], label = ["Production state"  "Standby state" "Off state"], xlabel = "Time [h]", legend = :right,left_margin = 5Plots.mm, right_margin = 15Plots.mm)
-savefig("Binary variables.png")
+savefig("Figures/Binary variables.png")
 bar(J.- 1/2, [p_bvec s_bvec i_bvec], label = ["Production state"  "Standby state" "Off state"], xlabel = "Time [h]", legend = :right,left_margin = 5Plots.mm, right_margin = 15Plots.mm, bar_width = 1.0, fillalpha = 0.5, linealpha = 0.1, bar_position = :centered)
-savefig("Binary variablesbars.png")
+savefig("Figures/Binary variablesbars.png")
 
 plot(J, [Y_bvec Z_bvec ], label = ["Hot start"  "Cold start" ], xlabel = "Time [h]", left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Binary variables cold hot start.png")
+savefig("Figures/Binary variables cold hot start.png")
 
 plot(J, Q_coolvec, xlabel = "Time [h]", ylabel = "Cooling Power [W]",legend = false,left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Cooling power.png")
+savefig("Figures/Cooling power.png")
 
 # plot(J, p_uvec, xlabel = "Time [h]", ylabel = "Power to utility grid [W]",left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-# savefig("Power to utility grid.png")
+# savefig("Figures/Power to utility grid.png")
 
 # plot([p_uvec pvec p_Nvec p_cvec], label = ["Power to utility grid" "Electrolyser power" "Wind power" "Compressor power"], xlabel="Time [h]",ylabel = "Power [MW]", legend = :topleft, left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-# savefig("powers.png")
+# savefig("Figures/powers.png")
 
 plot(J, Ivec, xlabel = "Time [h]", ylabel = "Electrolyser current [A]",left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Electrolyser current.png")
+savefig("Figures/Electrolyser current.png")
 
 plot(J, mdotH2vec, xlabel = "Time [h]", ylabel = "Hydrogen production rate [kg/s]",left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Hydrogen production rate.png")
+savefig("Figures/Hydrogen production rate.png")
 
 
 colours = ifelse.(p_bvec.==1, :green, (ifelse.(s_bvec .== 1, :orange, :red)))
@@ -7540,7 +7539,7 @@ ylabel!("Electrolyser Temperature [°C]")
 
 
 # Save the plot to a file
-savefig("Temperaturebarscolours.png")
+savefig("Figures/Temperaturebarscolours.png")
 
 bar(J.-1/2,pvec, label = "Electrolyser Power", xlabel = "Time [h]", ylabel = "Electrolyser power [MW]",
     legend = :topleft, left_margin = 5Plots.mm, right_margin = 15Plots.mm, bar_width = 1.0, fillalpha = 0.5, linealpha = 0.1)
@@ -7550,4 +7549,4 @@ plot!(twinx(), J.-1/2,epricevec, label = "Electricity price", ylabel = "Electric
       line = :path, legend = :topright, color = :red)
 
 # Save the plot to a file
-savefig("power_price_bars.png")
+savefig("Figures/power_price_bars.png")

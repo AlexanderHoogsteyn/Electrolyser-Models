@@ -5,29 +5,24 @@
 # in your assignment, but you may.
 
 ## Step 0: Activate environment - ensure consistency accross computers
-using Pkg
-Pkg.activate(@__DIR__) # @__DIR__ = directory this script is in
-Pkg.instantiate() # If a Manifest.toml file exist in the current project, download all the packages declared in that manifest. Else, resolve a set of feasible packages from the Project.toml files and install them.
-Pkg.add("LaTeXStrings")
-Pkg.add("PyPlot")
+
 ##  Step 1: input data
 using CSV
 using DataFrames
 using YAML
 using Logging
-using MAT
 
-data = YAML.load_file(joinpath(@__DIR__, "data.yaml"))
+data = YAML.load_file(joinpath(@__DIR__, "Data/data.yaml"))
 # ePrice = CSV.read(joinpath(@__DIR__, "eprice.csv"), DataFrame, silencewarnings=true)
 # ePrice = CSV.read(joinpath(@__DIR__, "Day-ahead Prices_April_2023.csv"), DataFrame, silencewarnings=true)
-ePrice = CSV.read(joinpath(@__DIR__, "Day-ahead Prices_2019.csv"), DataFrame, silencewarnings=true)
+ePrice = CSV.read(joinpath(@__DIR__, "Data/Day-ahead Prices_2019.csv"), DataFrame, silencewarnings=true)
 
-coeffs2PEM1 = CSV.read(joinpath(@__DIR__, "coeffs2PEM1.csv"), DataFrame, silencewarnings=true)
-coeffs2PEM2 = CSV.read(joinpath(@__DIR__, "coeffs2PEM2.csv"), DataFrame, silencewarnings=true)
-coeffs2PEM3 = CSV.read(joinpath(@__DIR__, "coeffs2PEM3.csv"), DataFrame, silencewarnings=true)
-coeffs2PEM4 = CSV.read(joinpath(@__DIR__, "coeffs2PEM4.csv"), DataFrame, silencewarnings=true)
-coeffs2PEM5 = CSV.read(joinpath(@__DIR__, "coeffs2PEM5.csv"), DataFrame, silencewarnings=true)
-coeffs2PEM6 = CSV.read(joinpath(@__DIR__, "coeffs2PEM6.csv"), DataFrame, silencewarnings=true)
+coeffs2PEM1 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2PEM1.csv"), DataFrame, silencewarnings=true)
+coeffs2PEM2 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2PEM2.csv"), DataFrame, silencewarnings=true)
+coeffs2PEM3 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2PEM3.csv"), DataFrame, silencewarnings=true)
+coeffs2PEM4 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2PEM4.csv"), DataFrame, silencewarnings=true)
+coeffs2PEM5 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2PEM5.csv"), DataFrame, silencewarnings=true)
+coeffs2PEM6 = CSV.read(joinpath(@__DIR__, "Linearisations/coeffs2PEM6.csv"), DataFrame, silencewarnings=true)
 
 ## Step 2: create model & pass data to model
 using JuMP
@@ -4921,10 +4916,10 @@ for j in 1:1
     objective_values[366, j] = operating_hours
     objective_values[367, j] = average_eff
 end
-matfile = matopen("objective_values_PEM.mat", "w")
-header = "objective_values"
-write(matfile, header, objective_values)
-close(matfile)
+#matfile = matopen("objective_values_PEM.mat", "w")
+#eader = "objective_values"
+#write(matfile, header, objective_values)
+#close(matfile)
 
 
 # objective_values = Matrix{Float64}(undef, 367*24, 12)
@@ -5275,49 +5270,45 @@ mdotH2vec = [mdotH2[j] for j in J]
 
 using Plots
 using LaTeXStrings
-using StatsPlots
+#using StatsPlots
 using Plots.PlotMeasures
 
 
-pyplot()
+gr()
 plot(pvec, label = "Electrolyser Power", xlabel="Time [h]",ylabel = "Electrolyser power [MW]", color = :red, 
         legend = :topleft, left_margin = 5Plots.mm, right_margin = 15Plots.mm)
 plot!(twinx(), epricevec, label = "Electricity price", ylabel="Electricity Price [€/MWh]", legend = :topright)
-savefig("power_price.png")
+savefig("Figures/power_price.png")
 
 plot(J,p_Nvec, xlabel = "Time [h]", ylabel = "Wind Power [MW]",legend = false, left_margin = 5Plots.mm, right_margin = 15Plots.mm)
-savefig("Windpower.png")
+savefig("Figures/Windpower.png")
 
 plot(epricevec, xlabel = "Time [h]", ylabel="Electricity Price [€/MWh]", legend=false)
-savefig("eprice.png")
+savefig("Figures/eprice.png")
 
 plot(J.+1/2, [Tvec], xlabel = "Time [h]", ylabel = "Electrolyser Temperature [°C]",legend = false, left_margin = 5Plots.mm, right_margin = 15Plots.mm)
-savefig("Temperature.png")
+savefig("Figures/Temperature.png")
 
 bar(J.+1/2, [Tvec], xlabel = "Time [h]", ylabel = "Electrolyser Temperature [°C]", legend = false, left_margin = 5Plots.mm, right_margin = 15Plots.mm, bar_width = 1.0, fillalpha = 0.5, linealpha = 0.1)
-savefig("Temperaturebars.png")
+savefig("Figures/Temperaturebars.png")
 
 
 plot(J, [p_bvec s_bvec i_bvec], label = ["Production state"  "Standby state" "Off state"], xlabel = "Time [h]", legend = :right,left_margin = 5Plots.mm, right_margin = 15Plots.mm)
-savefig("Binary variables.png")
+savefig("Figures/Binary variables.png")
 bar(J.+ 1/2, [p_bvec s_bvec i_bvec], label = ["Production state"  "Standby state" "Off state"], xlabel = "Time [h]", legend = :right,left_margin = 5Plots.mm, right_margin = 15Plots.mm, bar_width = 1.0, fillalpha = 0.5, linealpha = 0.1)
-savefig("Binary variablesbars.png")
+savefig("Figures/Binary variablesbars.png")
 
 plot(J, [Z_bvec ], label = ["Cold start" ], xlabel = "Time [h]", left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Binary variables cold hot start.png")
+savefig("Figures/Binary variables cold hot start.png")
 
 plot(J, Q_coolvec, xlabel = "Time [h]", ylabel = "Cooling Power [W]",legend = false,left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Cooling power.png")
-
-
-# plot([p_uvec pvec p_Nvec p_cvec], label = ["Power to utility grid" "Electrolyser power" "Wind power" "Compressor power"], xlabel="Time [h]",ylabel = "Power [MW]", legend = :topleft, left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-# savefig("powers.png")
+savefig("Figures/Cooling power.png")
 
 plot(J, Ivec, xlabel = "Time [h]", ylabel = "Electrolyser current [A]",left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Electrolyser current.png")
+savefig("Figures/Electrolyser current.png")
 
 plot(J, mdotH2vec, xlabel = "Time [h]", ylabel = "Hydrogen production rate [kg/s]",left_margin = 5Plots.mm, right_margin = 15Plots.mm )
-savefig("Hydrogen production rate.png")
+savefig("Figures/Hydrogen production rate.png")
 
 bar(J.-1/2, pvec, label = "Electrolyser Power", xlabel = "Time [h]", ylabel = "Electrolyser power [MW]",
     legend = :topleft, left_margin = 5Plots.mm, right_margin = 15Plots.mm, bar_width = 1.0, fillalpha = 0.5, linealpha = 0.1)
@@ -5327,7 +5318,7 @@ plot!(twinx(), J.-1/2, epricevec, label = "Electricity price", ylabel = "Electri
       line = :path, legend = :topright, color = :red)
 
 # Save the plot to a file
-savefig("power_price_bars.png")
+savefig("Figures/power_price_bars.png")
 
 colours = ifelse.(p_bvec.==1, :green, (ifelse.(s_bvec .== 1, :orange, :red)))
 states = ["Production state"  "Off state" "Standby state"]
@@ -5362,4 +5353,4 @@ ylabel!("Electrolyser Temperature [°C]")
 
 
 # Save the plot to a file
-savefig("Temperaturebarscolours.png")
+savefig("Figures/Temperaturebarscolours.png")

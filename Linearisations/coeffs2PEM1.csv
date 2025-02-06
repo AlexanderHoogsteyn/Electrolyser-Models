@@ -1,0 +1,2 @@
+Coefficients constant [W],Coefficients T [W/K],Coefficients j [W/(A/m^2)],T_start [K],T_end [K],j_start [A/m^2],j_end [A/m^2],Area [m^2],Temperature starts,Temperature ends,Current density starts,Current density ends
+5633.662003, -17.578251, 0.561167, 293.000000, 373.000000, 1500.000000, 20000.000000, 0.210000, 293.000000, 373.000000, 1500.000000, 20000.000000
